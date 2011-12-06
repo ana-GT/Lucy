@@ -9,9 +9,14 @@ set (CMAKE_CXX_FLAGS "-g -O0 -Wall -Wextra -Wpointer-arith -fno-default-inline -
 include (${CMAKE_INSTALL_PREFIX}/share/dart/DART_config.cmake)
 include (${CMAKE_INSTALL_PREFIX}/share/grip/GRIP_config.cmake)
 
+find_package( PCL 1.1 REQUIRED )
+
 # Set my include directories
 include_directories( .
-                     Hope/rosFunctions/include )
+                     Hope/rosFunctions/include
+                     ${PCL_INCLUDE_DIRS} )
+
+add_definitions( ${PCL_DEFINITIONS} )
 
 # Search all header and source files
 file (GLOB srcs "*.cpp")
@@ -25,13 +30,12 @@ set ( planners_srcs RRT/RRT.cpp
                     B1Planner/B1Ranking.cpp
                     kdtree/kdtree.c
                     Hope/HopePlanner.cpp
-					Hope/HopePlanner_Search.cpp )
+					Hope/HopePlanner_Search.cpp
+					Hope/HopePlanner_Plotting.cpp )
 
-set ( myFunctions_hdrs Hope/myFunctions/ArmState.h
-					   Hope/myFunctions/CheckObject.h
+set ( myFunctions_hdrs Hope/myFunctions/CheckObject.h
 		               Hope/myFunctions/CheckProcess.h
-	                   Hope/myFunctions/Dijkstra.h
-                       Hope/myFunctions/HopePreprocessor.h )
+	                   Hope/myFunctions/Dijkstra.h )
 
 set ( myFunctions_srcs Hope/myFunctions/CheckObject.cpp
 		               Hope/myFunctions/CheckProcess.cpp
@@ -50,7 +54,7 @@ find_package (wxWidgets)
 if (wxWidgets_FOUND)
   include (${wxWidgets_USE_FILE})
   include_directories(${DART_HEADERS} ${GRIP_HEADERS} ${WXWIDGETS_SHARED_INCLUDE_DIRS})
-  link_directories(${CMAKE_SOURCE_DIR}/lib ${GRIP_LIBDIR} ${WXWIDGETS_SHARED_LIBRARY_DIRS})
+  link_directories(${CMAKE_SOURCE_DIR}/lib ${GRIP_LIBDIR} 				  ${WXWIDGETS_SHARED_LIBRARY_DIRS} ${PCL_LIBRARY_DIRS})
 
   add_executable (BenchmarkTests ${srcs} 
                                  ${planners_srcs} 
@@ -59,7 +63,11 @@ if (wxWidgets_FOUND)
                                  ${hdrs} 
                                  ${myFunctions_hdrs} ) 
 
-  target_link_libraries (BenchmarkTests ${GRIP_LIBRARIES} ${DART_LIBRARIES} ${wxWidgets_LIBRARIES} )
+  target_link_libraries (BenchmarkTests ${GRIP_LIBRARIES} 
+										${DART_LIBRARIES} 											${wxWidgets_LIBRARIES}
+										${PCL_COMMON_LIBRARIES} 
+										${PCL_IO_LIBRARIES} 
+                                        ${PCL_LIBRARIES} )
    
 else (wxWidgets_FOUND)
   message ("wxWidgets not found!")

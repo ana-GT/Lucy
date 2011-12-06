@@ -145,6 +145,11 @@ public:
 	//-- Voxelization functions
     void calculateInfo3D( VoxelGrid<int> &_voxel, PFDistanceField &_df );
 
+    //-- Plotting functions
+    void PointcloudViewer( std::vector<string> _PCDFilenames );
+    string PointcloudWriter( char* _filename, int _index );
+    int line_num( char* _filename );
+
 private:
     //-- Member variables
     bool mCopyWorld;

@@ -170,7 +170,7 @@ BenchmarkTests::BenchmarkTests( wxWindow *parent, const wxWindowID id,
 		    0, // make horizontally unstretchable
 		    wxALL, // make border all around (implicit top alignment)
 		    1 ); // set border width to 1, so start buttons are close together
-    col4Sizer->Add( new wxButton(this, button_PlotFree, wxT("Free button")),
+    col4Sizer->Add( new wxButton(this, button_PlotFree, wxT("Show Pointcloud")),
 		    0, // make horizontally unstretchable
 		    wxALL, // make border all around (implicit top alignment)
 		    1 ); // set border width to 1, so start buttons are close together
@@ -435,7 +435,7 @@ void BenchmarkTests::OnButton(wxCommandEvent &evt) {
             printf("Send planning command \n");
             int maxNodes = 8000;
             HopePlanner planner( *mWorld, mCollision, false, stepSize );
-    	      bool result = planner.planPath( robotId, 
+    	    bool result = planner.planPath( robotId, 
                                             links, 
                                             startConf, 
                                             targetPose,
@@ -524,7 +524,12 @@ void BenchmarkTests::OnButton(wxCommandEvent &evt) {
         /** Plot free */
 	      case button_PlotFree:
           {
-             printf("Nothing here yet \n");
+			 HopePlanner planner;
+             string pcl_name;
+             pcl_name = planner.PointcloudWriter( "PointCloudData.txt", 0 );
+             std::vector<string> clouds(1);
+             clouds[0] = pcl_name;
+             planner.PointcloudViewer( clouds );
           }		
 	          break;
 
