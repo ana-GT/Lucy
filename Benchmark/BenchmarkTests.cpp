@@ -410,24 +410,13 @@ void BenchmarkTests::OnButton(wxCommandEvent &evt) {
 	          if( targetPose.size() != 6 ){ std::cout << "--(x) Must set a target pose (x)--" << std::endl; break; }
 	          if( startConf.size() < 0 ){ std::cout << "--(x) Must set a start configuration (x)--" << std::endl; break; }
 	          if( mWorld == NULL ){ std::cout << "--(x) Must load a world (x)--" << std::endl; break; }
-	          if( mWorld->mRobots.size() < 1){ std::cout << "--(x) Must load a world with a robot(x)--" << std::endl; break; }
+	          if( mWorld->mRobots.size() < 1 ){ std::cout << "--(x) Must load a world with a robot(x)--" << std::endl; break; }
 
             double stepSize = 0.02;
 
-	          //wxThread planThread;
-	          //planThread.Create();
 
-            int maxNodes = 8000;
-            B1Planner planner( *mWorld, mCollision, false, stepSize );
-    	      bool result = planner.planPath( robotId, 
-                                            links, 
-                                            startConf, 
-                                            targetPose, 
-                                            0, // no smooth 
-                                            maxNodes );
+            std::vector<Eigen::VectorXd> path;
 
-            if( result )
-            {  SetTimeline( planner.mPath ); }
           }
             break;
 
